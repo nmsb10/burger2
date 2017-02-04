@@ -6,8 +6,6 @@ var db = require("../models");
 var express = require("express");
 var router = express.Router();
 
-console.log(db.Burger);
-
 // Create all the routes and set up logic within those routes where required.
 router.get('/', function(request, response){
 	db.Burger.findAll({}).then(function(data){//remember: .then is a promise
@@ -34,9 +32,12 @@ router.post('/', function(request, response){
 });
 
 router.put('/:id', function(request, response){
-	var condition = 'id = ' + request.params.id;
-
-	db.Burger.update({devoured: request.body.devoured}, condition, function(){
+	//var condition = 'id = ' + request.params.id;
+	db.Burger.update(request.body,{
+		where:{
+			id: request.params.id
+		}
+	}).then(function(){
 		response.redirect('/');
 	});
 });
