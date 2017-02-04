@@ -1,14 +1,12 @@
-// Dependencies
+// DEPENDENCIES
 var express = require('express');
 //body-parser used to process the data
 var bodyParser = require('body-parser');
-//var path = require('path');
 var methodOverride = require('method-override');
 
-// Sets up the Express App
+// CREATE THE EXPRESS APP
 //tells node to use an "express" server
 var app = express();
-
 //the port the server decides for you OR the localport 3000
 var PORT = process.env.PORT || 3000;
 
@@ -56,5 +54,13 @@ var routes = require('./controllers/burgers_controller.js');
 //here, if URL is /, use routes as specified in burgers_controller.js
 app.use('/', routes);
 
+// Requiring our models for syncing
+var db = require("./models");
+
 // Starts the server to begin listening for requests
-app.listen(PORT);
+// Syncing our sequelize models and then starting the express app
+db.sequelize.sync({ force: true }).then(function() {
+	app.listen(PORT, function(){
+		console.log("App listening on PORT " + PORT);
+	});
+});

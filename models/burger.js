@@ -1,33 +1,22 @@
-// Also inside burger.js, create the code that will call the ORM or query functions
-//using burger specific input for the ORM or query functions.
-// Export at the end of the burger.js file.
-
-// Import the ORM to create functions that will interact with the database.
-var orm = require("../config/orm.js");
-
-//a model is a representation of data
-var burger = {
-	all: function(callback){
-		orm.selectAll('burgers', function(response){
-			callback(response);
-		});
-	},
-	create: function(columns, values, callback){
-		orm.insertOne('burgers', columns, values, function(response){
-			callback(response);
-		});
-	},
-	showDevoured: function(column, condition, callback){
-		orm.showSelection('burgers', column, condition, function(response){
-			callback(response);
-		});
-	},
-	update: function(changeObject, condition, callback){
-		orm.updateOne('burgers', changeObject, condition, function(response){
-			callback(response);
-		});
-	}
+//http://docs.sequelizejs.com/en/latest/docs/models-definition/
+module.exports = function(sequelize, DataTypes) {
+	//create a Burger model that matches up with db
+	//Use the define method to define mappings between a model and a table.
+	//Sequelize will then automatically add the attributes createdAt and updatedAt to it.
+	//So you will be able to know when the database entry went into the db and when it was updated the last time.
+	var Burger = sequelize.define('Burger', {//this is like a 'burger' table
+		burger_name: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			validate: {
+				len: [1]
+			}
+		},
+		devoured: {
+			type: DataTypes.BOOLEAN,
+			allowNull: false,
+			defaultValue: false
+		}
+	});
+	return Burger;
 };
-
-// Export the database functions for the controller (burgers_controller.js).
-module.exports = burger;
